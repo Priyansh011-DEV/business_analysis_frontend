@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 export default function Result() {
   const [data, setData] = useState(null);
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const stored = localStorage.getItem("analysis");
     if (stored) {
       setData(JSON.parse(stored));
+      setTimeout(() => setVisible(true), 80);
     }
   }, []);
 
@@ -41,7 +43,7 @@ export default function Result() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -51,8 +53,15 @@ export default function Result() {
           font-family: 'DM Mono', monospace;
           display: flex;
           flex-direction: column;
+          opacity: 0;
+          transition: opacity 0.6s ease;
         }
 
+        .result-wrap.is-visible {
+          opacity: 1;
+        }
+
+        /* ── HEADER ─────────────────────────────── */
         .result-header {
           display: flex;
           justify-content: space-between;
@@ -109,99 +118,194 @@ export default function Result() {
         }
         .btn-solid:hover { background: #2e2e20; }
 
+        /* ── LAYOUT ─────────────────────────────── */
         .result-body {
           display: grid;
-          grid-template-columns: 1fr 2fr;
+          grid-template-columns: 320px 1fr;
           flex: 1;
+          min-height: calc(100vh - 85px);
         }
 
-        /* LEFT SIDEBAR */
+        /* ── SIDEBAR ────────────────────────────── */
         .result-sidebar {
-          padding: 64px 52px;
+          padding: 72px 52px 72px 64px;
           border-right: 1px solid #c8c4b8;
           display: flex;
           flex-direction: column;
-          justify-content: flex-start;
+          justify-content: space-between;
           position: sticky;
           top: 85px;
-          height: fit-content;
+          height: calc(100vh - 85px);
         }
+
+        .sidebar-top {}
 
         .result-eyebrow {
           font-size: 9px;
-          letter-spacing: 0.28em;
+          letter-spacing: 0.32em;
           color: #a08c6e;
           text-transform: uppercase;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
 
-        .result-deco {
-          width: 40px;
+        .eyebrow-tick {
+          width: 20px;
           height: 1px;
           background: #a08c6e;
-          margin-bottom: 24px;
+          display: inline-block;
         }
 
         .result-title {
           font-family: 'Cormorant Garamond', serif;
-          font-size: 44px;
+          font-size: 54px;
           font-weight: 300;
           color: #6b6b4a;
-          line-height: 1.1;
-          letter-spacing: 0.02em;
+          line-height: 1.05;
+          letter-spacing: 0.01em;
+          margin-bottom: 32px;
         }
 
         .result-title em {
           font-style: italic;
           color: #4a4a30;
+          font-weight: 400;
         }
 
-        /* RIGHT CONTENT */
+        .sidebar-rule {
+          width: 100%;
+          height: 1px;
+          background: linear-gradient(to right, #c8c4b8 60%, transparent);
+          margin-bottom: 28px;
+        }
+
+        .sidebar-meta {
+          font-size: 10px;
+          color: #a09a8a;
+          line-height: 1.9;
+          letter-spacing: 0.04em;
+        }
+
+        .sidebar-meta strong {
+          color: #6b6b4a;
+          font-weight: 400;
+        }
+
+        /* Section count */
+        .sidebar-bottom {
+          padding-bottom: 8px;
+        }
+
+        .result-count {
+          font-size: 72px;
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          color: #d8d4ca;
+          line-height: 1;
+          letter-spacing: -0.02em;
+        }
+
+        .result-count-label {
+          font-size: 9px;
+          letter-spacing: 0.24em;
+          color: #b0a898;
+          text-transform: uppercase;
+          margin-top: 4px;
+        }
+
+        /* ── CARDS ──────────────────────────────── */
         .result-content {
-          padding: 64px 64px;
+          padding: 0;
         }
 
         .result-card {
-          padding: 32px 0;
+          padding: 48px 64px;
           border-bottom: 1px solid #c8c4b8;
           display: grid;
-          grid-template-columns: 120px 1fr;
-          gap: 24px;
+          grid-template-columns: 100px 1fr;
+          gap: 32px;
           align-items: start;
+          transition: background 0.2s ease;
         }
+
         .result-card:first-child {
-          border-top: 1px solid #c8c4b8;
+          border-top: none;
+        }
+
+        .result-card:hover {
+          background: rgba(107, 107, 74, 0.03);
         }
 
         .card-meta {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 8px;
+          padding-top: 6px;
         }
 
         .card-num {
           font-size: 9px;
-          letter-spacing: 0.18em;
+          letter-spacing: 0.2em;
           color: #c8c4b8;
         }
 
         .card-label {
-          font-size: 9px;
-          letter-spacing: 0.22em;
+          font-size: 8px;
+          letter-spacing: 0.28em;
           color: #6b6b4a;
           text-transform: uppercase;
         }
 
+        .card-label-line {
+          width: 20px;
+          height: 1px;
+          background: #c8c4b8;
+          margin-top: 4px;
+        }
+
+        .card-body {}
+
+        .card-heading {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 28px;
+          font-weight: 400;
+          color: #4a4a30;
+          margin-bottom: 14px;
+          letter-spacing: 0.01em;
+          line-height: 1.2;
+        }
+
         .card-value {
-          font-size: 13px;
-          color: #4a4a34;
-          line-height: 1.8;
+          font-size: 14px;
+          color: #5a5a44;
+          line-height: 1.9;
           font-weight: 300;
           letter-spacing: 0.02em;
         }
+
+        /* Stagger-in animation */
+        .result-card {
+          opacity: 0;
+          transform: translateY(12px);
+          animation: fadeUp 0.5s ease forwards;
+        }
+
+        .result-card:nth-child(1) { animation-delay: 0.1s; }
+        .result-card:nth-child(2) { animation-delay: 0.22s; }
+        .result-card:nth-child(3) { animation-delay: 0.34s; }
+        .result-card:nth-child(4) { animation-delay: 0.46s; }
+
+        @keyframes fadeUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
       `}</style>
 
-      <div className="result-wrap">
+      <div className={`result-wrap ${visible ? "is-visible" : ""}`}>
 
         {/* HEADER */}
         <header className="result-header">
@@ -216,12 +320,27 @@ export default function Result() {
 
           {/* SIDEBAR */}
           <div className="result-sidebar">
-            <p className="result-eyebrow">Analysis Complete</p>
-            <div className="result-deco" />
-            <h1 className="result-title">
-              Generated<br />
-              <em>Insights</em>
-            </h1>
+            <div className="sidebar-top">
+              <p className="result-eyebrow">
+                <span className="eyebrow-tick" />
+                Analysis Complete
+              </p>
+              <h1 className="result-title">
+                Generated<br />
+                <em>Insights</em>
+              </h1>
+              <div className="sidebar-rule" />
+              <p className="sidebar-meta">
+                Four dimensions reviewed:<br />
+                <strong>Insight · Risk</strong><br />
+                <strong>Recommendation · Explanation</strong>
+              </p>
+            </div>
+
+            <div className="sidebar-bottom">
+              <p className="result-count">04</p>
+              <p className="result-count-label">Sections</p>
+            </div>
           </div>
 
           {/* CARDS */}
@@ -231,8 +350,12 @@ export default function Result() {
                 <div className="card-meta">
                   <span className="card-num">{c.num}</span>
                   <span className="card-label">{c.label}</span>
+                  <div className="card-label-line" />
                 </div>
-                <p className="card-value">{c.value}</p>
+                <div className="card-body">
+                  <p className="card-heading">{c.label}</p>
+                  <p className="card-value">{c.value}</p>
+                </div>
               </div>
             ))}
           </div>

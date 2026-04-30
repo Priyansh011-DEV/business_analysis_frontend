@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 export default function Upload() {
   const [pastFile, setPastFile] = useState(null);
   const [targetFile, setTargetFile] = useState(null);
-
-  // 🔥 NEW STATES
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState("Initializing...");
 
@@ -21,7 +19,6 @@ export default function Upload() {
     try {
       setLoading(true);
 
-      // premium staged messages
       setStep("Parsing documents...");
       setTimeout(() => setStep("Comparing datasets..."), 1200);
       setTimeout(() => setStep("Generating insights..."), 2400);
@@ -91,7 +88,14 @@ export default function Upload() {
           border-right: 1px solid #c8c4b8;
           display: flex;
           flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .upload-left-top {
+          display: flex;
+          flex-direction: column;
           justify-content: center;
+          flex: 1;
         }
 
         .upload-title {
@@ -107,6 +111,78 @@ export default function Upload() {
           line-height: 1.8;
         }
 
+        /* Instructions panel */
+        .instructions-panel {
+          margin-top: auto;
+          padding-top: 40px;
+          border-top: 1px solid #d8d4ca;
+        }
+
+        .instructions-label {
+          font-size: 8px;
+          letter-spacing: 0.28em;
+          color: #a08c6e;
+          text-transform: uppercase;
+          margin-bottom: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .instructions-label::after {
+          content: "";
+          flex: 1;
+          height: 1px;
+          background: #d8d4ca;
+        }
+
+        .instructions-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .instructions-list li {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          font-size: 10px;
+          color: #7a7660;
+          line-height: 1.6;
+          letter-spacing: 0.04em;
+        }
+
+        .instr-num {
+          font-size: 8px;
+          color: #a08c6e;
+          letter-spacing: 0.1em;
+          min-width: 14px;
+          padding-top: 1px;
+          opacity: 0.8;
+        }
+
+        .instr-beta-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          margin-top: 2px;
+        }
+
+        .beta-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #b8a882;
+          display: inline-block;
+          animation: pulse-dot 2.4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.3); }
+        }
+
         .upload-right {
           padding: 80px 64px;
           display: flex;
@@ -119,6 +195,11 @@ export default function Upload() {
           padding: 28px;
           margin-bottom: 20px;
           position: relative;
+          transition: border-color 0.2s ease;
+        }
+
+        .file-zone:hover {
+          border-color: #a09a8a;
         }
 
         .file-zone.has-file {
@@ -132,6 +213,16 @@ export default function Upload() {
           cursor: pointer;
         }
 
+        .file-zone-text {
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          color: #7a7660;
+        }
+
+        .file-zone.has-file .file-zone-text {
+          color: #5a5a3a;
+        }
+
         .btn-analyze {
           padding: 14px;
           background: #1a1a14;
@@ -139,9 +230,21 @@ export default function Upload() {
           border: none;
           cursor: pointer;
           letter-spacing: 0.2em;
+          font-family: 'DM Mono', monospace;
+          font-size: 10px;
+          transition: background 0.2s ease;
         }
 
-        /* 🔥 PREMIUM LOADER */
+        .btn-analyze:hover:not(:disabled) {
+          background: #2e2e22;
+        }
+
+        .btn-analyze:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        /* Loader overlay */
         .overlay {
           position: fixed;
           inset: 0;
@@ -193,7 +296,6 @@ export default function Upload() {
         }
       `}</style>
 
-      {/* 🔥 LOADER OVERLAY */}
       {loading && (
         <div className="overlay">
           <div className="loader-box">
@@ -214,29 +316,61 @@ export default function Upload() {
 
         <div className="upload-body">
           <div className="upload-left">
-            <h1 className="upload-title">Compare Business Data</h1>
-            <p className="upload-desc">
-              Upload past and target data to generate insights.
-            </p>
+            <div className="upload-left-top">
+              <h1 className="upload-title">Compare Business Data</h1>
+              <p className="upload-desc">
+                Upload past and target data to generate insights.
+              </p>
+            </div>
+
+            {/* Instructions panel — bottom-left */}
+            <div className="instructions-panel">
+              <p className="instructions-label">Before you upload</p>
+              <ul className="instructions-list">
+                <li>
+                  <span className="instr-num">01</span>
+                  <span>Upload files in <strong style={{color: '#6b6b4a', fontWeight: 400}}>PDF format only</strong> — no Excel, CSV, or Word docs.</span>
+                </li>
+                <li>
+                  <span className="instr-num">02</span>
+                  <span>Use <strong style={{color: '#6b6b4a', fontWeight: 400}}>plain text PDFs</strong> — avoid scanned pages or table-heavy layouts for best results.</span>
+                </li>
+                <li>
+                  <span className="instr-num">03</span>
+                  <span>
+                    <span className="instr-beta-badge">
+                      <span className="beta-dot"></span>
+                      <span>Product is currently in build — errors may occur.</span>
+                    </span>
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div className="upload-right">
             <div className={`file-zone ${pastFile ? "has-file" : ""}`}>
               <input
                 type="file"
+                accept=".pdf"
                 disabled={loading}
                 onChange={(e) => setPastFile(e.target.files[0])}
               />
-              {pastFile ? pastFile.name : "Upload Past Data"}
+              <span className="file-zone-text">
+                {pastFile ? pastFile.name : "Upload Past Data"}
+              </span>
             </div>
 
             <div className={`file-zone ${targetFile ? "has-file" : ""}`}>
               <input
                 type="file"
+                accept=".pdf"
                 disabled={loading}
                 onChange={(e) => setTargetFile(e.target.files[0])}
               />
-              {targetFile ? targetFile.name : "Upload Target Data"}
+              <span className="file-zone-text">
+                {targetFile ? targetFile.name : "Upload Target Data"}
+              </span>
             </div>
 
             <button
