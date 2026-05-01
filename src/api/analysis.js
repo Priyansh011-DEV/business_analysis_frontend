@@ -4,9 +4,9 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 const API = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true, // ✅ required for cross-origin requests
 });
 
-// 🔥 Upload + Compare API
 export const uploadAndCompare = async (pastFile, targetFile) => {
   const token = localStorage.getItem("token");
 
