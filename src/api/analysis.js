@@ -18,7 +18,7 @@ export const uploadAndCompare = async (pastFile, targetFile) => {
   formData.append("past", pastFile);
   formData.append("target", targetFile);
 
-  return await API.post("apiv2/compare", formData, {
+  return await API.post("/apiv2/compare", formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
