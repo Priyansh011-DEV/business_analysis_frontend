@@ -57,7 +57,7 @@ export default function Login() {
     try {
       const res = await loginUser({ email, password });
 
-      const token = res.data.token;
+      const token = res.token;
 
       if (!token) {
         alert("No token received from backend");

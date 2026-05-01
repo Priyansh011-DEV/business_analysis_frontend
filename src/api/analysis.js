@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+const API = axios.create({
+  baseURL: BASE_URL,
+});
 
 // 🔥 Upload + Compare API
 export const uploadAndCompare = async (pastFile, targetFile) => {
@@ -14,14 +18,10 @@ export const uploadAndCompare = async (pastFile, targetFile) => {
   formData.append("past", pastFile);
   formData.append("target", targetFile);
 
-  return await axios.post(
-    `${BASE_URL}/apiv2/compare`,
-    formData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  return await API.post("apiv2/compare", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };

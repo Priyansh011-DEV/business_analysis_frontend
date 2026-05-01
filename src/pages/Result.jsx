@@ -390,8 +390,8 @@ export default function Result() {
         <header className="result-header">
           <p className="result-brand">Business Analytics</p>
           <div className="result-header-actions">
-            <button className="btn-ghost" onClick={() => navigate("/Home")}>Dashboard</button>
-            <button className="btn-solid" onClick={() => navigate("/Upload")}>New Analysis</button>
+            <button className="btn-ghost" onClick={() => navigate("/home")}>Dashboard</button>
+            <button className="btn-solid" onClick={() => navigate("/upload")}>New Analysis</button>
           </div>
         </header>
 
